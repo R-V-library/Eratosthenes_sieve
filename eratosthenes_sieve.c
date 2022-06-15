@@ -2,68 +2,70 @@
 # include <stdbool.h>
 # include <stdlib.h>
 
-// define struct linked list
+/**
+ * Define node structure type linked list.
+ */
 struct Node {
 	int value;
 	struct Node * next;
 };
 
 
-// Actual sift of erastothenes
-// n = stop point
-void erastothenes(int n){
-	
-	// Make linked list
+/** @brief Searches primes uptil value of n via the Eratosthenes sieve method.
+ *  @param n the max value wherein primes are searched.
+ */
+void eratosthenes(int n){
+	int i;
+	struct Node * temp;
+    struct Node * start;
 	struct Node * first_node = (struct Node *) malloc (sizeof(struct Node));
     struct Node * head = first_node;
-	int i;
+	
+	/* Construct linked list up to value n. */
     for (i = 2; i <= n; i++){
         head->value = i;
         if (i < n){
-          head->next =  (struct Node *) malloc (sizeof(struct Node));
-          head = head->next; 
+			head->next =  (struct Node *) malloc (sizeof(struct Node));
+			head = head->next; 
         } else {
-          head->next = NULL;
+			head->next = NULL;
         }
     }
-	
-	
-	
-	// actual sieve
-	struct Node * temp;
-    struct Node * start;
     
-    // actual sieve
+    /* Sift through linked list to find primes. */
     start = first_node;
     while (start->value * start->value < n){
-        
         head = start;
         while (head->next != NULL){
-            if ((head->next->value % start->value) == 0){
-                temp = head->next->next; // node after next node
-                free(head->next); // free next node
-                head->next = temp; // node after deleted node is next node
+			
+			/* If multiple of starting point, drop node from linked list. */
+            if ((head->next->value % start->value) == 0){ 
+				temp = head->next->next; 
+				free(head->next); 
+				head->next = temp; 
             }
+			
             if (head->next != NULL){
-              head = head->next;
+				head = head->next;
             } 
         }
-        start = start->next; // reset head to next node 
+		
+		/* Reset start to next node in linked list. */
+        start = start->next; 
     }
 	
-	
-		// print resulting list + free memory
-		head  = first_node;
-		while(head != NULL){
-			temp = head;
-			printf("%d ",head->value);
-			head = head->next;
-			free(temp);
-		}		
+	/* Print resulting list and free memory */
+	head  = first_node;
+	while(head != NULL){
+		temp = head;
+		printf("%d ",head->value);
+		head = head->next;
+		free(temp);
+	}		
 }
 
-
+/* Main */
 int main(){
-	erastothenes(2000000);
+	eratosthenes(2000000);
 	return 0;
 }
